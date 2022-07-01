@@ -30,10 +30,11 @@ Killing the `top` instance on the host will stop the containerized process and i
     # Use PID from `ps aux | fgrep top | fgrep root`, i.e. the host PID
     sudo kill 1702
 
-On Linux, a container can thus be just a process. The containerized process is in a restricted namespace
+On Linux, a container can thus be like most other processes without any performance penalty.
+The containerized process is simply in a restricted namespace
 with a different view of the processes environment and file systems.
-When running Linux containers on Windows, they might actually run inside a VM, but Linux containers on a Linux host
-can perform just like plain host processes.
+When running Linux containers on Windows or Mac, they actually run inside a VM.
+On the Mac, that VM shows as a process `com.docker.hyperkit`.
 
  * https://docs.microsoft.com/en-us/virtualization/windowscontainers/deploy-containers/linux-containers 
  * https://stackoverflow.com/questions/41550727/how-does-docker-for-windows-run-linux-containers 
