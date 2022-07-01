@@ -94,7 +94,7 @@ Execute shell in running container
 Delete stopped containers 
 
     docker ps -a 
-    docker container  rm   id_or_name_of_container 
+    docker container  rm   id_or_name_of_container
 
  * https://docs.docker.com/get-started/docker_cheatsheet.pdf 
  * https://stackoverflow.com/questions/57607381/how-do-i-change-timezone-in-a-docker-container 
@@ -162,6 +162,23 @@ Note different versions of `nc` in this example, requiring `-p 9876` to serve
 from the container.
 
  * https://stackoverflow.com/questions/39901311/docker-ubuntu-bash-ping-command-not-found
+
+
+Dockerfile
+----------
+
+Check content of existing image:
+
+    docker image history --no-trunc ubuntu
+
+Order of commands in `Dockerfile` matters, because changes
+result in re-build from then on.
+http://localhost/tutorial/image-building-best-practices/ has hints,
+including use of `.dockerignore`.
+
+Multi-stage builds allow installing JDK or `gcc` to build,
+but then only keep the binaries in the resulting image.
+
 
 EPICS Base
 ----------
