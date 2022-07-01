@@ -126,17 +126,40 @@ Alternatively, containers can directly mount a host folder:
 Network
 -------
 
+Docker can create its own networks:
+
+    docker network create mynet
+
+Now run two containers using the `busybox` image which includes `ping`, `ifconfig`, `nc`:
+
+    # Terminal 1
+    docker run -it --rm --network mynet --network-alias box1 busybox
+    # Terminal 2
+    docker run -it --rm --network mynet --network-alias box2 busybox
+
+`ifconfig` shows just `lo` and `eth0` in each container, with different IP.
+Their names resolve.
+    
+    # On box1:
+    ping box2
+    nc -l -v -p 9876
+    
+    # On box2:
+    ping box1
+    nc -v box1 9876
+
+
 Use `--net=host for full connectivity.
-To test, the `busybox` image includes `ping`, `ifconfig`, `nc`:
 
     docker run -it --rm --net=host busybox
 
 This container will see all host interfaces in `ifconfig`.
-When running `nc -l {IP of host} 9876` on the host,
+When running `nc -l -v -p 9876` on the container,
+the host can connect via `nc -l localhost 9876`.
+When running `nc -v -l {IP of host} 9876` on the host,
 the container will be able to connect via `nc {IP of host} 9876`.
-
-TODO But running `nc -l ..` in the container will not  allow the host to connect?
-
+Note different versions of `nc` in this example, requiring `-p 9876` to serve
+from the container.
 
  * https://stackoverflow.com/questions/39901311/docker-ubuntu-bash-ping-command-not-found
 
