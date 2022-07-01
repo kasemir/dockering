@@ -183,21 +183,52 @@ but then only keep the binaries in the resulting image.
 EPICS Base
 ----------
 
-https://github.com/prjemian/epics-docker/tree/main/v1.1
-https://github.com/pklaus/docker-epics-directory#readme 
-https://github.com/pklaus/docker-epics/blob/master/epics_base/7.0.4_debian/Dockerfile 
+See `epics_base` for building image that contains EPICS base
+and to run an IOC in there.
+
+ * https://github.com/prjemian/epics-docker/tree/main/v1.1
+ * https://github.com/pklaus/docker-epics-directory#readme 
+ * https://github.com/pklaus/docker-epics/blob/master/epics_base/7.0.4_debian/Dockerfile 
  
 
-TODO
-----
+Running IOCs
+------------
 
-‘docker build ...' is a lot like maven, fetching dependencies from some internet location,
-reporting errors like `Resolution field "ansi-regex@5.0.1" is incompatible with requested version ...`.
+Basic idea for running an IOC:
 
-Build images into local registry?
+    docker run -itd --name ioc_demo --net=host -v $PWD/db:/db ornl_epics/epics_base softIocPVA -d /db/demo.db
 
-Where are the registries? `docker info`: 
+Check running IOCs:
 
-    Registry: https://index.docker.io/v1/ 
-    Insecure Registries: 127.0.0.0/8 
- 
+    docker ps
+
+View log:
+
+    docker logs [-f] ioc_demo
+
+Attach console (exit via `CTRL-p CTRL-q`):
+
+    docker attach ioc_demo 
+
+Stop IOC via `CTRL-c` or `CTRL-d` in console, or via
+
+   docker stop ioc_demo
+
+After an IOC has been stopped or exited for some reason, the log remains available,
+which can help to debug issues.
+Before restarting the IOC, however, a previous container needs to be removed:
+
+   docker rm ioc_demo
+
+
+Concerns
+--------
+
+‘docker build ...' is a lot like maven, fetching dependencies from some internet location.
+That is generally convenient and simplifies staying updated, but carries risk for an operational setup.
+When running an older docker instance (5 years old!) that worked fine with the already downloaded ubuntu image,
+then deleted that image and pulled the latest one, the result didn't work.
+Had to install a recent docker instance.
+
+A production setup should thus use a local registry to avoid network issues
+and use tagged versions to get maybe older versions but have reproducible outcome.
