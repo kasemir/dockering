@@ -183,8 +183,8 @@ but then only keep the binaries in the resulting image.
 EPICS Base
 ----------
 
+https://github.com/prjemian/epics-docker/tree/main/v1.1
 https://github.com/pklaus/docker-epics-directory#readme 
-
 https://github.com/pklaus/docker-epics/blob/master/epics_base/7.0.4_debian/Dockerfile 
  
 
