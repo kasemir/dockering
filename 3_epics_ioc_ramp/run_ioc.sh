@@ -9,7 +9,7 @@ docker rm -f ioc_ramp
 # -it     Create TTY for interactive use and/or for softIocPVA to continue
 # -d      Detach (remove to run in terminal)
 # --name  .. to identify IOC
-docker run -itd --net=host --name ioc_ramp  ornl_epics/epics_ioc_ramp
+docker run -itd --net=host --name ioc_ramp --user $UID  ornl_epics/epics_ioc_ramp
 
 # Attach console via
 #

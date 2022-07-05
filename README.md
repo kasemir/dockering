@@ -124,6 +124,22 @@ Alternatively, containers can directly mount a host folder:
     docker run -it --rm -v /tmp:/mnt/host_tmp ubuntu /bin/bash
 
 
+Users
+-----
+
+Each container keeps its own user and group IDs in /etc/passwd and /etc/group,
+and by default the container runs as "root".
+When running a container with a named user, that user needs to be defined
+inside the container.
+It is also possible to run the container with a numeric user ID
+which can be helpful when mounting folders and wanting to access them
+as a user that's defined on the host:
+
+    # Run container with current host user:
+    docker run --rm -v /tmp:/mnt/host_tmp --user $UID \
+           ubuntu /usr/bin/touch /mnt/host_tmp/created_by_container
+
+
 Network
 -------
 
