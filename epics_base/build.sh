@@ -1,1 +1,1 @@
-docker build -t ornl_epics/epics_base .
+docker build -f Dockerfile -t ornl_epics/epics_base .

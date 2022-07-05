@@ -1,7 +1,7 @@
 # EPICS base, size about 2GB
 
 # 'build' image
-FROM ubuntu AS build
+FROM debian:stable-slim AS build
 
 # Tools to fetch source code
 RUN apt-get update && \
