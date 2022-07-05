@@ -17,5 +17,14 @@ COPY --from=ornl_epics/epics_base /controls/base/include   /controls/base/includ
 COPY --from=ornl_epics/epics_base /controls/base/lib       /controls/base/lib
 COPY --from=ornl_epics/epics_base /controls/base/templates /controls/base/templates
 
+COPY --from=ornl_epics/epics_base /controls/autosave/bin       /controls/autosave/bin
+COPY --from=ornl_epics/epics_base /controls/autosave/configure /controls/autosave/configure
+COPY --from=ornl_epics/epics_base /controls/autosave/db        /controls/autosave/db
+COPY --from=ornl_epics/epics_base /controls/autosave/dbd       /controls/autosave/dbd
+COPY --from=ornl_epics/epics_base /controls/autosave/include   /controls/autosave/include
+COPY --from=ornl_epics/epics_base /controls/autosave/lib       /controls/autosave/lib
+
+COPY --from=ornl_epics/epics_base /controls/RELEASE.local      /controls/RELEASE.local
+
 ENV PATH="/controls/base/bin/linux-x86_64:${PATH}"
 CMD [ "/bin/bash" ]

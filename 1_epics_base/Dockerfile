@@ -19,7 +19,17 @@ RUN wget -q https://epics.anl.gov/download/base/${EPICS_BASE_NAME}.tar.gz && \
     tar -xf ${EPICS_BASE_NAME}.tar.gz                                     && \
     rm ${EPICS_BASE_NAME}.tar.gz                                          && \
     mv ${EPICS_BASE_NAME} base                                            && \
-    cd base && make && make clean
+    cd base && make && make clean                                         && \
+    echo EPICS_BASE=/controls/base >/controls/RELEASE.local
+
+# Add autosave
+RUN cd /controls                                                                    && \
+    wget https://github.com/epics-modules/autosave/archive/refs/tags/R5-10-2.tar.gz && \
+    tar vzxf R5-10-2.tar.gz                                                         && \
+    rm R5-10-2.tar.gz                                                               && \
+    mv autosave-R5-10-2 autosave                                                    && \
+    cd autosave && make && make clean                                               && \
+    echo AUTOSAVE=/controls/autosave >>/controls/RELEASE.local
 
 # Compilation takes about 15 minutes.
 # Adding the last "make clean" as a separate
