@@ -18,7 +18,7 @@ ARG EPICS_BASE_NAME="base-7.0.6.1"
 RUN wget -q https://epics.anl.gov/download/base/${EPICS_BASE_NAME}.tar.gz && \
     tar -xf ${EPICS_BASE_NAME}.tar.gz                                     && \
     rm ${EPICS_BASE_NAME}.tar.gz                                          && \
-    ln -s ${EPICS_BASE_NAME} base                                         && \
+    mv ${EPICS_BASE_NAME} base                                            && \
     cd base && make && make clean
 
 # Compilation takes about 15 minutes.
@@ -29,5 +29,8 @@ RUN wget -q https://epics.anl.gov/download/base/${EPICS_BASE_NAME}.tar.gz && \
 # But the resulting image size stayed at ~2 GB,
 # while a fresh image based on this Dockerfile uses only 800 MB
 
-ENV PATH="/controls/base-7.0.6.1/bin/linux-x86_64:${PATH}"
+# Cleanup
+RUN rm -rf /var/lib/apt/lists/*
+
+ENV PATH="/controls/base/bin/linux-x86_64:${PATH}"
 CMD [ "/bin/bash" ]

@@ -180,6 +180,16 @@ including use of `.dockerignore`.
 Multi-stage builds allow installing JDK or `gcc` to build,
 but then only keep the binaries in the resulting image.
 
+Finding available packages on ubuntu:
+
+    # Get package info, unzip
+    apt-get update
+    apt-get install lz4
+    cd /var/lib/apt/lists
+    for i in *Packages*; do lz4cat $i > $i.txt; done
+
+    # Look for something
+    fgrep libreadline *.txt
 
 EPICS Base
 ----------
