@@ -10,8 +10,8 @@ docker rm ioc_ramp ioc_noise
 # -d      Detach (remove to run in terminal)
 # --name  .. to identify IOC
 # -v      Mount './db' folder into container as /db
-docker run -itd --name ioc_ramp --net=host -v $PWD/db:/db ornl_epics/epics_base softIocPVA -d /db/ramp.db
-docker run -itd --name ioc_noise --net=host -v $PWD/db:/db ornl_epics/epics_base softIocPVA -d /db/noise.db
+docker run -itd --net=host -v $PWD/db:/db --name ioc_ramp  ornl_epics/epics_base softIocPVA -d /db/ramp.db
+docker run -itd --net=host -v $PWD/db:/db --name ioc_noise ornl_epics/epics_base softIocPVA -d /db/noise.db
 
 # Attach console via
 #
