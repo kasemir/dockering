@@ -284,14 +284,64 @@ Before restarting the IOC, however, a previous container needs to be removed:
    docker rm ioc_demo
 
 
-Concerns
+Registry
 --------
 
-‘docker build ...' is a lot like maven, fetching dependencies from some internet location.
-That is generally convenient and simplifies staying updated, but carries risk for an operational setup.
-When running an older docker instance (5 years old!) that worked fine with the already downloaded ubuntu image,
-then deleted that image and pulled the latest one, the result didn't work.
-Had to install a recent docker instance.
+Setup and maintenance of a secure local registry is not trivial.
+This example uses an insecure one without encryption nor authentication.
+Start a local registry, using an `/opt/..` folder for storage:
 
-A production setup should thus use a local registry to avoid network issues
-and use tagged versions to get maybe older versions but have reproducible outcome.
+    docker run -d -p 5000:5000                             \
+               -v /opt/docker_registry:/var/lib/registry   \
+               --restart=always --name registry registry:2
+
+Note that simply starting the local registry requires internet access
+for it to download the `registry` image.
+
+To allow access from other hosts, may have to open firewall.
+Use `--remove-rule` to revert, add `--permanent` to persist the setting over firewall restarts.
+
+    sudo firewall-cmd --direct --add-rule ipv4 filter IN_public_allow 0 -m tcp -p tcp --dport 5000 -j ACCEPT
+
+To push locally available images into the registry, they need a tag that
+starts with "hostname:port/":
+
+    docker tag ubuntu:latest             localhost:5000/ubuntu
+    docker tag ornl_epics/epics_base     localhost:5000/ornl_epics/epics_base:latest
+    docker tag ornl_epics/epics_prod     localhost:5000/ornl_epics/epics_prod:latest
+    docker tag ornl_epics/epics_ioc_ramp localhost:5000/ornl_epics/epics_ioc_ramp:latest
+
+Now push those tagged images into the local registry:
+
+    docker push localhost:5000/ubuntu
+    docker push localhost:5000/ornl_epics/epics_base:latest 
+    docker push localhost:5000/ornl_epics/epics_prod:latest 
+    docker push localhost:5000/ornl_epics/epics_ioc_ramp:latest 
+
+Trying to use this registry from another host will end like this:
+
+    $ docker pull name_of_reg_host:5000/ubuntu
+    Error ... server gave HTTP response to HTTPS client
+
+Enable insecure access by adding the following to the docker config on the client.
+With docker desktop, the config can be found in the "Docker Engine" tab of the desktop.
+On Linux, use the file `/etc/docker/daemon.json`:
+
+    {
+      "insecure-registries": ["name_of_reg_host:5000" ]
+    }
+
+When now pulling from the remote repo, the image uses that name:
+
+    docker pull name_of_reg_host:5000/ornl_epics/epics_prod:latest 
+
+Re-tag to a more convenient name:
+
+    docker tag name_of_reg_host:5000/ornl_epics/epics_prod:latest  ornl_epics/epics_prod:latest
+
+
+ * https://docs.docker.com/registry
+ * https://docs.docker.com/registry/insecure
+ * https://docs.docker.com/engine/reference/commandline/dockerd/#daemon-configuration-file
+
+
