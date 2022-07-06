@@ -10,8 +10,10 @@ docker rm -f ioc_ramp ioc_noise
 # -d      Detach (remove to run in terminal)
 # --name  .. to identify IOC
 # -v      Mount './db' folder into container as /db
+#
+# --restart=always to restart on exit and start on bootup
 docker run -itd --net=host -v $PWD/../db:/db --name ioc_ramp  --user $UID ornl_epics/epics_prod softIocPVA -d /db/ramp.db
-docker run -itd --net=host -v $PWD/../db:/db --name ioc_noise --user $UID ornl_epics/epics_prod softIocPVA -d /db/noise.db
+docker run -itd --restart=always --net=host -v $PWD/../db:/db --name ioc_noise --user $UID ornl_epics/epics_prod softIocPVA -d /db/noise.db
 
 # Attach console via
 #
