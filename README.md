@@ -1,6 +1,16 @@
 Docker Explorations
 ===================
 
+Demo of using Docker for EPICS IOCs.
+
+ * `1_epics_base`:
+   Docker image with EPICS base and some other EPICS module. Can be used to run IOCs or as basis for building additional modules.
+ * `2_epics_prod`:
+   Smaller image that has just the binaries. Can be used to run IOCs.
+ * `3_epics_ioc_ramp`:
+   Image for running a specific IOC.
+
+
 Overview
 --------
 
