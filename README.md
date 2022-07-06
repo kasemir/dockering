@@ -175,8 +175,17 @@ Their names resolve.
     ping box1
     nc -v box1 9876
 
+To run IOCs inside a container and make them available on the wider network,
+there are two options.
+One is to specifically map ports from the container to the host by
+running the container with options like
 
-Use `--net=host for full connectivity.
+    docker run -p 5064:5064/udp -p 5064:5064 p 5065:5065 -it ...
+
+This approach works for a single container with one IOC, but gets
+complicated beyond that.
+
+On Linux hosts, there is an additional option `--net=host` for full connectivity.
 
     docker run -it --rm --net=host busybox
 
@@ -188,7 +197,24 @@ the container will be able to connect via `nc {IP of host} 9876`.
 Note different versions of `nc` in this example, requiring `-p 9876` to serve
 from the container.
 
+When running multiple IOC containers with `--net=host`, they will behave just like
+other IOCs running on a Linux host.
+The first one will listen on UDP 5064 as well as TCP 5064.
+The next one will listen on the same UDP 5064 but a random free TCP port.
+Based on the Linux kernel, only one of the IOCs might receive
+search requests on UDP 5064 unless the client uses a broadcast in
+`EPICS_CA_ADDR_LIST`, for example 127.255.255.255 for local tests on the host,
+or the actual broadcast address of the subnet, assuming that the host
+does not block that via a firewall.
+
+When debugging network access on an ubuntu image,
+you may need to add the networking tools:
+
+    apt-get update
+    apt-get install net-tools
+
  * https://stackoverflow.com/questions/39901311/docker-ubuntu-bash-ping-command-not-found
+
 
 
 Dockerfile
